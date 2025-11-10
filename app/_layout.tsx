@@ -1,9 +1,13 @@
+import { useLanguage } from "@/src/hooks/useLanguage";
+import i18n from "@/src/i18n";
 import { Stack } from "expo-router";
+import { Button } from "react-native";
 import { Provider } from "react-redux";
 import { store } from "../src/store";
 
 export default function RootLayout() {
-  console.log(i18n.language);
+  const { changeLanguage } = useLanguage();
+  console.log("Layout rendered", i18n.language);
   return (
     <Provider store={store}>
       <Stack>
@@ -12,7 +16,14 @@ export default function RootLayout() {
           options={{
             title: "Home",
             headerShown: true,
-            // headerRight: () => <LanguageDropdown />,
+            headerRight: () => (
+              <Button
+                title={i18n.language === "en" ? "Lang" : "Lang"}
+                onPress={() =>
+                  changeLanguage(i18n.language == "en" ? "hi" : "en")
+                }
+              />
+            ),
           }}
         />
 
