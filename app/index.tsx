@@ -1,6 +1,8 @@
 import { useFormData } from "@/src/hooks/useFormData";
+import { useLanguage } from "@/src/hooks/useLanguage";
 import { useProfile } from "@/src/hooks/useProfile";
 import { useRouter } from "expo-router";
+import { useTranslation } from "react-i18next";
 import { Button, Text, TextInput, View } from "react-native";
 
 export default function Home() {
@@ -8,9 +10,14 @@ export default function Home() {
   console.log(data);
   const router = useRouter();
   const { name, updateName } = useProfile();
+  const { t } = useTranslation();
+  const { changeLanguage } = useLanguage();
+
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>Home</Text>
+      <Text>{t("welcome")}</Text>
+      <Button title="Hindi" onPress={() => changeLanguage("hi")} />
+      <Button title="English" onPress={() => changeLanguage("en")} />
       <Text style={{ marginVertical: 20 }}>Stored Name: {data.name}</Text>
       <Button title="Go to Form" onPress={() => router.push("/form")} />
 
