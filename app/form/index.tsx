@@ -1,10 +1,9 @@
+import { DevTool } from "@hookform/devtools";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "expo-router";
 import { Controller, useForm } from "react-hook-form";
 import { Button, StyleSheet, Text, TextInput, View } from "react-native";
-import { useDispatch } from "react-redux";
 import * as yup from "yup";
-import { saveFormData } from "../../src/store/slices/formSlice";
 
 const schema = yup.object().shape({
   name: yup.string().required("Name is required"),
@@ -16,11 +15,9 @@ const schema = yup.object().shape({
     .string()
     .matches(/^[0-9]{10}$/, "Mobile must be 10 digits")
     .required("Mobile is required"),
-  address: yup.string().optional(),
 });
 
 export default function FormScreen() {
-  const dispatch = useDispatch();
   const router = useRouter();
 
   const {
@@ -29,16 +26,21 @@ export default function FormScreen() {
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
+    defaultValues: {
+      name: "",
+      email: "",
+      mobile: "",
+    },
   });
 
   const onSubmit = (data: any) => {
-    dispatch(saveFormData(data));
+    console.log("Form Data:", data);
     router.push("/");
-    console.log("Dispatched Form Data:", data);
   };
 
   return (
     <View style={styles.container}>
+      {/* Name */}
       <Text>Name</Text>
       <Controller
         control={control}
@@ -47,13 +49,14 @@ export default function FormScreen() {
           <TextInput
             style={styles.input}
             placeholder="Enter your name"
-            value={value}
+            value={value ?? ""}
             onChangeText={onChange}
           />
         )}
       />
       {errors.name && <Text style={styles.error}>{errors.name.message}</Text>}
 
+      {/* Email */}
       <Text>Email</Text>
       <Controller
         control={control}
@@ -63,13 +66,14 @@ export default function FormScreen() {
             style={styles.input}
             placeholder="Enter your email"
             keyboardType="email-address"
-            value={value}
+            value={value ?? ""}
             onChangeText={onChange}
           />
         )}
       />
       {errors.email && <Text style={styles.error}>{errors.email.message}</Text>}
 
+      {/* Mobile */}
       <Text>Mobile</Text>
       <Controller
         control={control}
@@ -80,7 +84,7 @@ export default function FormScreen() {
             placeholder="Enter your mobile number"
             keyboardType="numeric"
             maxLength={10}
-            value={value}
+            value={value ?? ""}
             onChangeText={onChange}
           />
         )}
@@ -89,22 +93,8 @@ export default function FormScreen() {
         <Text style={styles.error}>{errors.mobile.message}</Text>
       )}
 
-      <Text>Address</Text>
-      <Controller
-        control={control}
-        name="address"
-        render={({ field: { value, onChange } }) => (
-          <TextInput
-            style={styles.textarea}
-            placeholder="Enter your address (optional)"
-            multiline
-            value={value}
-            onChangeText={onChange}
-          />
-        )}
-      />
-
       <Button title="Submit" onPress={handleSubmit(onSubmit)} />
+      <DevTool control={control} />
     </View>
   );
 }
@@ -115,14 +105,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 6,
     padding: 10,
-    marginTop: 5,
-    marginBottom: 10,
-  },
-  textarea: {
-    borderWidth: 1,
-    borderRadius: 6,
-    padding: 10,
-    height: 80,
     marginTop: 5,
     marginBottom: 10,
   },
