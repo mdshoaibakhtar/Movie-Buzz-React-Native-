@@ -4,7 +4,6 @@ import { useUser } from "../src/hooks/useUser";
 
 export default function Home() {
   const name = useUser();
-  const a = "bad formatting"
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
       <Text>Home</Text>
