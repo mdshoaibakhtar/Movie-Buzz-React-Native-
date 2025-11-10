@@ -7,7 +7,7 @@ import { Button, StyleSheet, Text, View } from "react-native";
 
 export default function Home() {
   const data = useFormData();
-  console.log(data);
+  // console.log(data);
   const router = useRouter();
   const { name, updateName } = useProfile();
   const { t } = useTranslation();
